@@ -14,6 +14,7 @@ notes.get("/", (req, res) => {
     }
     res.json(notesArray);
   });
+  console.log(notesArray);
 });
 
 notes.post("/", (req, res) => {
@@ -38,6 +39,34 @@ notes.post("/", (req, res) => {
   } else {
     res.error("Error in saving note");
   }
+});
+
+notes.delete("/:id", (req, res) => {
+    const noteId = req.params.id;
+    console.log(noteId);
+  fs.readFile("./db/db.json", (err, data) => {
+    if (err) {
+      console.error(err);
+    }else{
+        notesArray = JSON.parse(data);
+    }
+  });
+
+  notesArray.forEach((note,idx) => {
+      if(note.id === noteId){
+          notesArray.splice(idx, 1);
+      }
+  })
+
+  fs.writeFile("./db/db.json", JSON.stringify(notesArray), (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      res.json(notesArray);
+      console.log("Note added successfully");
+    }
+  });
+
 });
 
 module.exports = notes;
