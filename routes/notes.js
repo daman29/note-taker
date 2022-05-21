@@ -5,7 +5,12 @@ const { v4: uuidv4 } = require('uuid');
 var notesArray = [];
 
 fs.readFile('./db/db.json', (err, data) => {
-    notesArray = JSON.parse(data)
+    if(err){
+        console.error(err)
+    }else{
+        notesArray = JSON.parse(data)
+    }
+
 })
 
 notes.get('/', (req, res) => {
@@ -19,8 +24,19 @@ notes.get('/', (req, res) => {
 })
 
 notes.post('/', (req, res) => {
-    notesArray.push(req.body)
-    console.log(notesArray)
+    const {title, text} = req.body
+    console.log(title, text)
+
+    if(req.body){
+        const newNote = {
+            title, 
+            text,
+            note_id: uuidv4()
+        }
+        notesArray.push(newNote)
+        console.log(notesArray)
+    }
+
 })
 
 module.exports = notes;
