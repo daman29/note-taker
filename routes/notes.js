@@ -25,7 +25,6 @@ notes.get('/', (req, res) => {
 
 notes.post('/', (req, res) => {
     const {title, text} = req.body
-    console.log(title, text)
 
     if(req.body){
         const newNote = {
@@ -34,7 +33,20 @@ notes.post('/', (req, res) => {
             note_id: uuidv4()
         }
         notesArray.push(newNote)
-        console.log(notesArray)
+        
+        fs.writeFile('./db/db.json',JSON.stringify(notesArray),(err) => {
+            if (err) {
+                console.error(err)
+            }else{
+                res.json(notesArray)
+                console.log('Note added successfully')
+            }
+        })
+
+
+
+    }else{
+        res.error('Error in saving note')
     }
 
 })
